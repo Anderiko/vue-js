@@ -4,3 +4,6 @@ var app = new Vue({
     message: 'Hello Vue!'
   }
 })
+
+
+console.log(sortTable);
