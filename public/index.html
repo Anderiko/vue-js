@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html lang="fr" dir="ltr">
-  <head>
+<head>
     <meta charset="utf-8">
     <title>Index</title>
 
-  </head>
-  <body>
+</head>
+<body>
 
     <div id="app">
-      {{ message }}
+        <p>{{ message }}</p>
+        <input type="text" v-model="message">
     </div>
-  </body>
+
+</body>
 
 
-  <!-- development version, includes helpful console warnings -->
-  <script src="../dist/vue.js"></script>
+<!-- development version, includes helpful console warnings -->
+<script src="../dist/vue.js"></script>
 
-  <script src="../src/main.js"></script>
+<script src="../src/main.js"></script>
 
 </html>
