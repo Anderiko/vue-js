@@ -12,6 +12,14 @@
         <input type="text" v-model="message">
     </div>
 
+    <div id="vm">
+      <ul style="list-style-type:none;">
+        <li v-for="(values, index) in obj">
+        <strong>{{ cate[index] }} : </strong>{{ values }}
+        </li>
+      </ul>
+    </div>
+
 </body>
 
 
