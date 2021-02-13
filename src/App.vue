@@ -6,7 +6,7 @@
       <a v-on:click="activeTab = 2" v-bind:class="[activeTab === 2 ? 'active' : '']">Statistiques</a>
     </nav>
     <div class="tabs container">
-      <ConfigTab v-if="activeTab === 0"/>
+      <ConfigTab v-if="activeTab === 0" v-model="config"/>
       <SearchTab v-if="activeTab === 1" v-bind:spellArray="spellArray"/>
       <StatsTab  v-if="activeTab === 2" v-bind:spellArray="spellArray"/>
     </div>
@@ -17,7 +17,7 @@
 import ConfigTab from './components/ConfigTab'
 import SearchTab from './components/SearchTab'
 import StatsTab from './components/StatsTab'
-import { sortTable } from '../static/data.min.js'
+import {sortTable} from '../static/data.min.js'
 
 export default {
   name: 'App',
@@ -29,9 +29,64 @@ export default {
   data () {
     return {
       spellArray: sortTable,
-      activeTab: 0
+      activeTab: 0,
+      config: config(),
+      testData: 'test'
+    }
+  },
+  methods: {
+    setCookie (name, value) {
+      setCookie(name, value)
+    },
+    delCookie (name) {
+      delCookie(name)
     }
   }
+}
+
+function config () {
+  let defaultConfig = {
+    check: {
+      nameSearch: false,
+      schoolSearch: false,
+      elementSearch: false,
+      classSearch: false,
+      levelSearch: false
+    },
+    arrays: {
+      availableBooks: spellBooks(),
+      spellBookSearch: []
+    }
+  }
+  let config = getCookie('config')
+  return config == null ? defaultConfig : config
+}
+
+function unique (value, index, self) {
+  return self.indexOf(value) === index
+}
+
+function spellBooks () {
+  let temp = []
+  sortTable.forEach((elt) => {
+    temp.push(elt[0])
+  })
+  return temp.filter(unique)
+}
+
+// ========  COOKIES  ========
+function setCookie (name, value) {
+  document.cookie = [name, '=', JSON.stringify(value), '; path=/;'].join('')
+}
+
+function getCookie (name) {
+  let result = document.cookie.match(new RegExp(name + '=([^;]+)'))
+  result && (result = JSON.parse(result[1])) // if (result != null) result = JSON.parse
+  return result
+}
+
+function delCookie (name) {
+  document.cookie = [name, '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/;'].join('')
 }
 </script>
 

@@ -1,7 +1,6 @@
 <template>
   <div class="mt-5">
     <h3 class="text-start">Recherche</h3>
-    <SearchForm/>
     <ul style="list-style-type:none;">
       <li v-bind:key="index" v-for="(values, index) in spellArray[0]">
         <strong>{{ categories[index] }} : </strong>{{ values }}
@@ -11,13 +10,8 @@
 </template>
 
 <script>
-import SearchForm from './SearchForm'
-
 export default {
   name: 'spellArray',
-  components: {
-    SearchForm
-  },
   props: ['spellArray'],
   data () {
     return {
