@@ -1,6 +1,7 @@
 <template>
   <div class="mt-5">
-    <h3 class="text-start">Statistiques</h3>
+    <h3 class="text-start mb-4">Statistiques</h3>
+    <hr>
     <p>{{ spellArray[0] }}</p>
   </div>
 </template>

@@ -1,12 +1,14 @@
 <template>
-  <div class="mt-5">
-    <h3 class="text-start">Configuration
-      <a v-on:click="setCookie" class="save-buttons text-primary"><i class="fas fa-save"></i></a>
-      <a v-on:click="delCookie" class="save-buttons text-danger"><i class="fas fa-trash"></i></a></h3>
+  <div class="mt-5 config">
+    <h3 class="text-start mb-4">Configuration
+      <a v-on:click="setCookie" class="save-buttons text-primary" title="Sauvegarder"><i class="fas fa-save"></i></a>
+      <a v-on:click="delCookie" class="save-buttons text-danger" title="Supprimer la sauvegarde"><i class="fas fa-trash"></i></a></h3>
+    <hr>
+    <h4 class="mb-2">Critères de recherche</h4>
     <ul style="list-style-type: none">
       <li v-bind:key="name" v-for="(val, name) in value.check">
-        <input type="checkbox" :value="val" :id="name" v-on:input="updateParent($event.target.checked, name, 'check')" v-model="value['check'][name]">
-        <label :for="name">{{ configTitle[name] }}</label>
+        <label><input type="checkbox" :value="val" v-on:input="updateParent($event.target.checked, name, 'check')" v-model="value['check'][name]">
+        {{ configTitle[name] }}</label>
       </li>
     </ul>
     <ConfigBooks v-model="value.arrays"/>
@@ -29,12 +31,12 @@ export default {
     },
     delCookie () {
       this.$parent.delCookie('config')
+      this.$parent.resetConfig()
     }
   },
   data () {
     return {
       configTitle: {
-        nameSearch: 'Rechercher par nom',
         schoolSearch: 'Rechercher par école',
         elementSearch: 'Rechercher par élément',
         classSearch: 'Rechercher par classe',
@@ -45,14 +47,42 @@ export default {
 }
 </script>
 
-<style scoped>
-  .save-buttons {
+<style>
+  .config .save-buttons {
     cursor: pointer;
     text-decoration: none;
+    padding-right: .3em;
   }
 
-  .save-buttons:first-child {
+  .config .save-buttons:first-child {
     padding-left: 1em;
-    padding-right: .3em;
+  }
+
+  .config h4 {
+    margin: 1em;
+  }
+
+  .config ul {
+    margin-left: 1em;
+  }
+
+  .config ul li {
+    padding: .1em;
+    display: flex;
+    justify-content: start;
+    align-items: baseline;
+  }
+
+  .config label {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+  }
+
+  .config input[type="checkbox"] {
+    height: 20px;
+    width: 20px;
+    display: block;
+    margin-right: .5em;
   }
 </style>

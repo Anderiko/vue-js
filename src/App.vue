@@ -1,19 +1,22 @@
 <template>
   <div id="appTest">
     <nav class="custom-navbar">
-      <a v-on:click="activeTab = 0" v-bind:class="[activeTab === 0 ? 'active' : '']">Configuration</a>
-      <a v-on:click="activeTab = 1" v-bind:class="[activeTab === 1 ? 'active' : '']">Recherche</a>
-      <a v-on:click="activeTab = 2" v-bind:class="[activeTab === 2 ? 'active' : '']">Statistiques</a>
+      <a v-on:click="activeTab = 0" v-bind:class="[activeTab === 0 ? 'active' : '']">Accueil</a>
+      <a v-on:click="activeTab = 1" v-bind:class="[activeTab === 1 ? 'active' : '']">Configuration</a>
+      <a v-on:click="activeTab = 2" v-bind:class="[activeTab === 2 ? 'active' : '']">Recherche</a>
+      <a v-on:click="activeTab = 3" v-bind:class="[activeTab === 3 ? 'active' : '']">Statistiques</a>
     </nav>
     <div class="tabs container">
-      <ConfigTab v-if="activeTab === 0" v-model="config"/>
-      <SearchTab v-if="activeTab === 1" v-bind:spellArray="spellArray"/>
-      <StatsTab  v-if="activeTab === 2" v-bind:spellArray="spellArray"/>
+      <HomeTab   v-if="activeTab === 0"/>
+      <ConfigTab v-if="activeTab === 1" v-model="config"/>
+      <SearchTab v-if="activeTab === 2" v-bind:searchData="searchData" v-bind:config="config"/>
+      <StatsTab  v-if="activeTab === 3" v-bind:spellArray="searchData.all"/>
     </div>
   </div>
 </template>
 
 <script>
+import HomeTab from './components/HomeTab'
 import ConfigTab from './components/ConfigTab'
 import SearchTab from './components/SearchTab'
 import StatsTab from './components/StatsTab'
@@ -24,14 +27,20 @@ export default {
   components: {
     StatsTab,
     SearchTab,
-    ConfigTab
+    ConfigTab,
+    HomeTab
   },
   data () {
     return {
-      spellArray: sortTable,
-      activeTab: 0,
+      activeTab: 2,
       config: config(),
-      testData: 'test'
+      searchData: {
+        all: sortTable,
+        schoolSearch: extract(2),
+        elementSearch: extract(3).flat().filter(unique).sort(),
+        classSearch: classSearch(),
+        levelSearch: levelSearch()
+      }
     }
   },
   methods: {
@@ -40,6 +49,9 @@ export default {
     },
     delCookie (name) {
       delCookie(name)
+    },
+    resetConfig () {
+      this.config = config()
     }
   }
 }
@@ -47,14 +59,13 @@ export default {
 function config () {
   let defaultConfig = {
     check: {
-      nameSearch: false,
       schoolSearch: false,
       elementSearch: false,
       classSearch: false,
       levelSearch: false
     },
     arrays: {
-      availableBooks: spellBooks(),
+      availableBooks: extract(0).sort(),
       spellBookSearch: []
     }
   }
@@ -62,21 +73,49 @@ function config () {
   return config == null ? defaultConfig : config
 }
 
-function unique (value, index, self) {
-  return self.indexOf(value) === index
+function unique (currElt, index, array) {
+  return array.indexOf(currElt) === index
 }
 
-function spellBooks () {
+function extract (index) {
   let temp = []
+
   sortTable.forEach((elt) => {
-    temp.push(elt[0])
+    temp.push(elt[index])
   })
-  return temp.filter(unique)
+
+  return temp.filter(unique).sort()
+}
+
+function classSearch () {
+  let temp = []
+
+  extract(4).forEach((arr) => {
+    arr.forEach((elt) => {
+      temp.push(elt[0])
+    })
+  })
+
+  return temp.filter(unique).sort()
+}
+
+function levelSearch () {
+  let temp = []
+
+  extract(4).forEach((arr) => {
+    arr.forEach((elt) => {
+      temp.push(elt[1])
+    })
+  })
+
+  return temp.filter(unique).sort()
 }
 
 // ========  COOKIES  ========
 function setCookie (name, value) {
-  document.cookie = [name, '=', JSON.stringify(value), '; path=/;'].join('')
+  let expire = new Date()
+  expire.setTime(expire.getTime() + 7 * 24 * 60 * 60 * 1000) // +7 jours
+  document.cookie = [name, '=', JSON.stringify(value), '; path=/; expires=' + expire.toUTCString()].join('')
 }
 
 function getCookie (name) {
