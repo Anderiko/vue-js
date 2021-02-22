@@ -9,7 +9,6 @@
       <SearchSelect v-if="config.check.classSearch" v-model="classSearch" v-bind:array="searchData.classSearch" v-bind:label="'Classe'"/>
       <SearchSelect v-if="config.check.levelSearch" v-model="levelSearch" v-bind:array="searchData.levelSearch" v-bind:label="'Niveau'"/>
     </div>
-    <hr>
     <SearchResult v-bind:results="results"/>
   </div>
 </template>
