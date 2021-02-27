@@ -10,7 +10,7 @@
       <HomeTab   v-if="activeTab === 0"/>
       <ConfigTab v-if="activeTab === 1" v-model="config"/>
       <SearchTab v-if="activeTab === 2" v-bind:searchData="searchData" v-bind:config="config"/>
-      <StatsTab  v-if="activeTab === 3" v-bind:spellArray="searchData.all"/>
+      <StatsTab  v-if="activeTab === 3" v-bind:spellArray="searchData.all" v-bind:searchData="searchData"/>
     </div>
   </div>
 </template>
@@ -32,7 +32,7 @@ export default {
   },
   data () {
     return {
-      activeTab: 2,
+      activeTab: 0,
       config: config(),
       searchData: {
         all: sortTable,
