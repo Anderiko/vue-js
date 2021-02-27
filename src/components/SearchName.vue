@@ -10,8 +10,10 @@
 <script>
 export default {
   name: 'SearchName',
+  // value correspond au nom du sort à recherché passé en v-model
   props: ['value'],
   methods: {
+    // Lors de la saisie, retourne au parent le nom et lance la recherche
     updateParent () {
       this.$emit('input', this.name)
       this.$parent.search()
@@ -19,7 +21,7 @@ export default {
   },
   data () {
     return {
-      name: this.value
+      name: this.value // Nom à rechercher
     }
   }
 }

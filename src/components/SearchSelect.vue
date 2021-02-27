@@ -11,13 +11,17 @@
 <script>
 export default {
   name: 'SearchSelect',
+  // array est le tableau représentant les différents choix pour un critère de sélection
+  // label correspond au titre du critère
+  // value est la valeur choisie passée en v-model
   props: ['array', 'label', 'value'],
   data () {
     return {
-      selected: this.value
+      selected: this.value // Valeur choisie
     }
   },
   methods: {
+    // Envoie la valeur selectionnée au parent et lance la recherche
     updateParent () {
       this.$emit('input', this.selected)
       this.$parent.search()

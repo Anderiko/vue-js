@@ -12,9 +12,11 @@
 <script>
 export default {
   name: 'Spell',
-  props: ['spell', 'index'],
+  // spell est le sort à afficher
+  props: ['spell'],
   data () {
     return {
+      // nom des différentes catégories
       categories: [
         'Livre',
         'Nom',
@@ -31,6 +33,7 @@ export default {
         'Description',
         'Nécessaire'
       ],
+      // changé lors d'un clique -> affiche les détails d'un sort
       show: false
     }
   }

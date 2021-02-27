@@ -4,7 +4,7 @@
     <hr>
     <ul>
       <li v-bind:key="index" v-for="(result, index) in results">
-        <Spell v-bind:spell="result" v-bind:index="index"/>
+        <Spell v-bind:spell="result"/>
       </li>
     </ul>
     <p v-if="!results.length">Aucun résultat</p>
@@ -16,6 +16,7 @@ import Spell from './Spell'
 
 export default {
   name: 'SearchResult',
+  // results est le tableau des sorts correspondants à la recherche
   props: ['results'],
   components: {Spell}
 }

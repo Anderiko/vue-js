@@ -2,7 +2,7 @@
   <div class="mt-5">
     <h3 class="text-start mb-4">Statistiques</h3>
     <hr>
-    <StatNumbers v-bind:spellArray="spellArray" v-bind:searchData="searchData"/>
+    <StatNumbers v-bind:searchData="searchData"/>
     <div class="row">
       <div class="col-md-6">
         <h5>Nombre de sorts par livre :</h5>
@@ -23,15 +23,17 @@ import StatNumbers from './StatNumbers'
 export default {
   name: 'StatsTab',
   components: {StatNumbers, StatChart},
-  props: ['spellArray', 'searchData'],
+  // searchData correspond aux données de recherche
+  props: ['searchData'],
   data () {
     return {
-      chartSpellsPerBooks: getData(this.spellArray, 0),
-      chartSpellsPerSchools: getData(this.spellArray, 2)
+      chartSpellsPerBooks: getData(this.searchData.all, 0), // Nombre de sorts par livres
+      chartSpellsPerSchools: getData(this.searchData.all, 2) // Nombre de sorts par écoles
     }
   }
 }
 
+// renvoie un objet de configuration de chart.js avec les labels, les données et les couleurs
 function getData (array, index) {
   let label = []
   let colors = []
@@ -49,6 +51,7 @@ function getData (array, index) {
     }
   })
 
+  // génération de couleurs semi aléatoire [tons de bleu] pour chaque label
   label.forEach(() => {
     let r = Math.floor(Math.random() * (50 - 20) + 20).toString(16)
     let g = Math.floor(Math.random() * (200 - 100) + 100).toString(16)

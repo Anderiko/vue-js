@@ -18,17 +18,21 @@
 <script>
 export default {
   name: 'ConfigBooks',
+  // value correspond aux 2 tableaux des livres passés en v-model
   props: ['value'],
   methods: {
+    // Permet d'ajouter un livre dans le tableau des livres dans lesquels rechercher
     addBook (index, name) {
       this.value.availableBooks.splice(index, 1)
       this.value.spellBookSearch.push(name)
       this.sortArrays()
     },
+    // Permet de retirer un livre du tableau des livres dans lesquels rechercher
     delBook (index, name) {
       this.value.spellBookSearch.splice(index, 1)
       this.value.availableBooks.push(name)
     },
+    // Trie les tableaux [Par ordre alphabétique]
     sortArrays () {
       this.value.spellBookSearch.sort()
       this.value.availableBooks.sort()

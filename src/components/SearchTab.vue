@@ -21,61 +21,69 @@ import SearchName from './SearchName'
 export default {
   name: 'SearchTab',
   components: {SearchName, SearchSelect, SearchResult},
+  // searchdata est le tableau avec les différentes données de recherche
+  // config représente la configuration pour la recherche
   props: ['searchData', 'config'],
   data () {
     return {
-      searchName: '',
-      schoolSearch: '',
-      elementSearch: '',
-      classSearch: '',
-      levelSearch: '',
-      results: []
+      searchName: '', // Recherche par nom
+      schoolSearch: '', // Recherche par école
+      elementSearch: '', // Recherche par élément
+      classSearch: '', // Recherche par classe
+      levelSearch: '', // Recherche par niveau
+      results: [] // Tableau des résultats
     }
   },
   methods: {
+    // Récupère les résultats
     search () {
-      this.results = this.getResults()
+      this.results = this.applyFilters(this.searchData.all)
     },
-    getResults () {
-      return this.applyFilters(this.searchData.all)
-    },
+    // Applique les filtres [en fonction de la configuration] et retourne le résultat
     applyFilters (tab) {
-      tab = tab.filter(booksFilter, this.config)
+      tab = tab.filter(booksFilter, this.config) // Filtre par livres
 
-      if (this.config.check.schoolSearch === true) tab = tab.filter(schoolFilter, this.schoolSearch)
+      tab = tab.filter(nameFilter, this.searchName.toLowerCase()) // Filtre par nom
 
-      if (this.config.check.elementSearch === true) tab = tab.filter(elementFilter, this.elementSearch)
+      if (this.config.check.schoolSearch === true) tab = tab.filter(schoolFilter, this.schoolSearch) // Filtre par écoles
 
-      if (this.config.check.classSearch === true) tab = tab.filter(classFilter, this.classSearch)
+      if (this.config.check.elementSearch === true) tab = tab.filter(elementFilter, this.elementSearch) // Filtre par éléments
 
-      if (this.config.check.levelSearch === true) tab = tab.filter(levelFilter, this.levelSearch)
+      if (this.config.check.classSearch === true) tab = tab.filter(classFilter, this.classSearch) // Filtre par classes
 
-      tab = tab.filter(nameFilter, this.searchName.toLowerCase())
+      if (this.config.check.levelSearch === true) tab = tab.filter(levelFilter, this.levelSearch) // Filtre par niveaux
+
       return tab
     }
   },
   mounted () {
+    // Lorsque le composant est chargé, lance la recherche
     this.search()
   }
 }
 
 // ====== FILTERS ======
+// filtre les livres
 function booksFilter (currElt) {
   return this.arrays.spellBookSearch.indexOf(currElt[0]) !== -1
 }
 
+// filtre les noms
 function nameFilter (currElt) {
   return currElt[1].toLowerCase().indexOf(this) > -1
 }
 
+// filtre les écoles
 function schoolFilter (currElt) {
   return currElt[2].toLowerCase() === this.toLowerCase()
 }
 
+// filtre les éléments
 function elementFilter (currElt) {
   return currElt[3].map(elt => elt.toLowerCase()).indexOf(this.toLowerCase()) > -1
 }
 
+// filtre les classes
 function classFilter (currElt) {
   let res = false
 
@@ -86,6 +94,7 @@ function classFilter (currElt) {
   return res
 }
 
+// filtre les niveaux
 function levelFilter (currElt) {
   let res = false
 

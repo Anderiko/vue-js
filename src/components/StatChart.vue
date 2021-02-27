@@ -4,13 +4,10 @@ import { Doughnut } from 'vue-chartjs'
 export default {
   extends: Doughnut,
   name: 'StatChart',
+  // Correspond à l'objet de configuration pour chart.js
   props: ['data'],
-  methods: {
-    update () {
-      this.$data._chart.update()
-    }
-  },
   mounted () {
+    // Affiche le graphique
     this.renderChart(this.data, {responsive: true})
   }
 }

@@ -10,7 +10,7 @@
       <HomeTab   v-if="activeTab === 0"/>
       <ConfigTab v-if="activeTab === 1" v-model="config"/>
       <SearchTab v-if="activeTab === 2" v-bind:searchData="searchData" v-bind:config="config"/>
-      <StatsTab  v-if="activeTab === 3" v-bind:spellArray="searchData.all" v-bind:searchData="searchData"/>
+      <StatsTab  v-if="activeTab === 3" v-bind:searchData="searchData"/>
     </div>
   </div>
 </template>
@@ -25,6 +25,7 @@ import {extract} from './mixins/mixin'
 
 export default {
   name: 'App',
+  // contient la fonction d'extraction ainsi qu'un filtre d'unicité
   mixins: [extract],
   components: {
     StatsTab,
@@ -34,27 +35,31 @@ export default {
   },
   data () {
     return {
-      activeTab: 0,
-      config: this.configuration(),
+      activeTab: 0, // Index de l'onglet actif
+      config: this.configuration(), // Récupération de la configuration si présente sinon configuration par défaut
       searchData: {
-        all: sortTable,
-        schoolSearch: this.extract(2, sortTable),
-        elementSearch: this.extract(3, sortTable).flat().filter(this.unique).sort(),
-        classSearch: this.classSearch(),
-        levelSearch: this.levelSearch()
+        all: sortTable, // Toutes les données du Model
+        schoolSearch: this.extract(2, sortTable), // Extraction des écoles depuis les données
+        elementSearch: this.extract(3, sortTable).flat().filter(this.unique).sort(), // Extraction des éléments depuis les données
+        classSearch: this.classSearch(), // Extraction des classes depuis les données
+        levelSearch: this.levelSearch() // Extraction des niveaux depuis les données
       }
     }
   },
   methods: {
+    // Appelle la fonction pour définir le cookie de configuration
     setCookie (name, value) {
       setCookie(name, value)
     },
+    // Appelle la fonction pour supprimer le cookie de configuration
     delCookie (name) {
       delCookie(name)
     },
+    // Réinitialise la configuration, est appelée après la supression du cookie ce qui remet en place la configuration par défaut
     resetConfig () {
       this.config = this.configuration()
     },
+    // Retourne la configuration depuis le cookie, la configuration par défaut le cas échéant
     configuration () {
       let defaultConfig = {
         check: {
@@ -71,6 +76,7 @@ export default {
       let config = getCookie('config')
       return config == null ? defaultConfig : config
     },
+    // Retourne un tableau contenant les classes depuis les données
     classSearch () {
       let temp = []
 
@@ -82,6 +88,7 @@ export default {
 
       return temp.filter(this.unique).sort()
     },
+    // Retourne un tableau contenant les niveaux depuis les données
     levelSearch () {
       let temp = []
 
@@ -97,18 +104,21 @@ export default {
 }
 
 // ========  COOKIES  ========
+// Enregistre un cookie avec son nom et sa valeur
 function setCookie (name, value) {
   let expire = new Date()
   expire.setTime(expire.getTime() + 7 * 24 * 60 * 60 * 1000) // +7 jours
   document.cookie = [name, '=', JSON.stringify(value), '; path=/; expires=' + expire.toUTCString()].join('')
 }
 
+// Récupère un cookie grâce à son nom
 function getCookie (name) {
   let result = document.cookie.match(new RegExp(name + '=([^;]+)'))
   result && (result = JSON.parse(result[1])) // if (result != null) result = JSON.parse
   return result
 }
 
+// Supprime un cookie [Défini la date d'expiration du cookie 1s après epoch]
 function delCookie (name) {
   document.cookie = [name, '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/;'].join('')
 }

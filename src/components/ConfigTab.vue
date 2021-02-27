@@ -17,18 +17,23 @@
 
 <script>
 import ConfigBooks from './ConfigBooks'
+
 export default {
   name: 'ConfigTab',
   components: {ConfigBooks},
+  // value correspond à la configuration passée en v-model
   props: ['value'],
   methods: {
+    // Communication de la nouvelle configuration vers le parent
     updateParent (val, name, type) {
       this.value[type][name] = val
       this.$emit('input', this.value)
     },
+    // Enregistre le cookie de configuration
     setCookie () {
       this.$parent.setCookie('config', this.value)
     },
+    // Supprime le cookie de configuration et rétabli la configuration par défaut
     delCookie () {
       this.$parent.delCookie('config')
       this.$parent.resetConfig()
@@ -36,7 +41,7 @@ export default {
   },
   data () {
     return {
-      configTitle: {
+      configTitle: { // Titres correspondants aux critères de recherche
         schoolSearch: 'Rechercher par école',
         elementSearch: 'Rechercher par élément',
         classSearch: 'Rechercher par classe',

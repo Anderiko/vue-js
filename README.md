@@ -2,20 +2,16 @@
 
 > TP Vue ENSSAT 2021 - Mathieu DUSE - Hugo PONTACQ
 
-## Build Setup
+## Setup du projet
 
 ``` bash
-# install dependencies
-npm install
+# installation initiale
+npm i
 
-# serve with hot reload at localhost:8080
+# lancement du projet sur localhost:8080
 npm run dev
 
-# build for production with minification
+# compilation en production
 npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
+# -> lancer un serveur sur /dist -> file:// ne peut pas marcher
 ```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
