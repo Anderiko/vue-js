@@ -21,9 +21,11 @@ import ConfigTab from './components/ConfigTab'
 import SearchTab from './components/SearchTab'
 import StatsTab from './components/StatsTab'
 import {sortTable} from '../static/data.min.js'
+import {extract} from './mixins/mixin'
 
 export default {
   name: 'App',
+  mixins: [extract],
   components: {
     StatsTab,
     SearchTab,
@@ -33,13 +35,13 @@ export default {
   data () {
     return {
       activeTab: 0,
-      config: config(),
+      config: this.configuration(),
       searchData: {
         all: sortTable,
-        schoolSearch: extract(2),
-        elementSearch: extract(3).flat().filter(unique).sort(),
-        classSearch: classSearch(),
-        levelSearch: levelSearch()
+        schoolSearch: this.extract(2, sortTable),
+        elementSearch: this.extract(3, sortTable).flat().filter(this.unique).sort(),
+        classSearch: this.classSearch(),
+        levelSearch: this.levelSearch()
       }
     }
   },
@@ -51,64 +53,47 @@ export default {
       delCookie(name)
     },
     resetConfig () {
-      this.config = config()
-    }
-  }
-}
-
-function config () {
-  let defaultConfig = {
-    check: {
-      schoolSearch: false,
-      elementSearch: false,
-      classSearch: false,
-      levelSearch: false
+      this.config = this.configuration()
     },
-    arrays: {
-      availableBooks: extract(0).sort(),
-      spellBookSearch: []
+    configuration () {
+      let defaultConfig = {
+        check: {
+          schoolSearch: false,
+          elementSearch: false,
+          classSearch: false,
+          levelSearch: false
+        },
+        arrays: {
+          availableBooks: this.extract(0, sortTable).sort(),
+          spellBookSearch: []
+        }
+      }
+      let config = getCookie('config')
+      return config == null ? defaultConfig : config
+    },
+    classSearch () {
+      let temp = []
+
+      this.extract(4, sortTable).forEach((arr) => {
+        arr.forEach((elt) => {
+          temp.push(elt[0])
+        })
+      })
+
+      return temp.filter(this.unique).sort()
+    },
+    levelSearch () {
+      let temp = []
+
+      this.extract(4, sortTable).forEach((arr) => {
+        arr.forEach((elt) => {
+          temp.push(elt[1])
+        })
+      })
+
+      return temp.filter(this.unique).sort()
     }
   }
-  let config = getCookie('config')
-  return config == null ? defaultConfig : config
-}
-
-function unique (currElt, index, array) {
-  return array.indexOf(currElt) === index
-}
-
-function extract (index) {
-  let temp = []
-
-  sortTable.forEach((elt) => {
-    temp.push(elt[index])
-  })
-
-  return temp.filter(unique).sort()
-}
-
-function classSearch () {
-  let temp = []
-
-  extract(4).forEach((arr) => {
-    arr.forEach((elt) => {
-      temp.push(elt[0])
-    })
-  })
-
-  return temp.filter(unique).sort()
-}
-
-function levelSearch () {
-  let temp = []
-
-  extract(4).forEach((arr) => {
-    arr.forEach((elt) => {
-      temp.push(elt[1])
-    })
-  })
-
-  return temp.filter(unique).sort()
 }
 
 // ========  COOKIES  ========
